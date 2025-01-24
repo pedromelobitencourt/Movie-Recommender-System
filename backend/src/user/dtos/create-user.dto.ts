@@ -2,11 +2,11 @@ import {
   IsString,
   IsEmail,
   IsOptional,
-  MinLength,
   IsArray,
   IsBoolean,
 } from 'class-validator';
-import { Transform } from 'class-transformer'; // Import the Transform decorator from class-transformer module
+import { Transform } from 'class-transformer';
+import { PasswordStrength } from '../filters/password.validator';
 
 export class CreateUserDto {
   @IsString()
@@ -16,7 +16,10 @@ export class CreateUserDto {
   email: string;
 
   @IsString()
-  @MinLength(6, { message: 'A senha deve ter pelo menos 6 caracteres' })
+  @PasswordStrength({
+    message:
+      'A senha deve ter pelo menos 6 caracteres, 1 letra maiúscula, 1 número e 1 caractere especial',
+  })
   password: string;
 
   @IsOptional()

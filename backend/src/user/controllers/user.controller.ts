@@ -6,13 +6,15 @@ import {
   Param,
   Put,
   Delete,
-  Query,
+  UseFilters,
 } from '@nestjs/common';
 import { UserService } from '../services/user.service';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
+import { UserExceptionFilter } from '../filters/user-query-exception.filter';
 
 @Controller('users') // Define o prefixo da rota (ex.: /users)
+@UseFilters(UserExceptionFilter)
 export class UserController {
   constructor(private readonly userService: UserService) {} // Injeta o serviço de usuários
 
