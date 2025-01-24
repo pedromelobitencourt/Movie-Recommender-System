@@ -45,6 +45,20 @@ export class UserService {
   }
 
   /**
+   * Busca um usuário pelo e-mail
+   */
+  async getUserByEmail(email: string): Promise<User> {
+    // Busca no banco de dados pelo campo e-mail
+    const user = await this.userRepository.findOne({ where: { email } });
+    if (!user) {
+      throw new NotFoundException(
+        `Usuário com o e-mail ${email} não foi encontrado`,
+      );
+    }
+    return user;
+  }
+
+  /**
    * Atualiza um usuário pelo ID
    */
   async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
