@@ -1,15 +1,20 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true, // Torna as variáveis de ambiente disponíveis em toda a aplicação
+    TypeOrmModule.forRoot({
+      type: 'postgres', // Tipo do banco de dados
+      host: 'localhost', // Host onde o PostgreSQL está rodando
+      port: 5432, // Porta padrão do PostgreSQL
+      username: 'admin', // Usuário criado
+      password: 'password', // Senha criada
+      database: 'movie_db', // Nome do banco de dados
+      autoLoadEntities: true, // Carrega automaticamente as entidades
+      synchronize: true, // Sincroniza o schema do banco com as entidades (não recomendado em produção)
     }),
     UserModule,
-    AuthModule,
   ],
 })
 export class AppModule {}

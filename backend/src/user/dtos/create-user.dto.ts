@@ -4,7 +4,9 @@ import {
   IsOptional,
   MinLength,
   IsArray,
+  IsBoolean,
 } from 'class-validator';
+import { Transform } from 'class-transformer'; // Import the Transform decorator from class-transformer module
 
 export class CreateUserDto {
   @IsString()
@@ -19,21 +21,23 @@ export class CreateUserDto {
 
   @IsOptional()
   @IsString()
-  preferredLanguage?: string; // Idioma preferido do usuário (opcional)
+  preferredLanguage?: string; // Idioma preferido do usuário
 
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
-  preferredGenres?: string[]; // Lista de gêneros favoritos (opcional)
+  preferredGenres?: string[]; // Lista de gêneros favoritos
 
   @IsOptional()
   @IsString()
-  location?: string; // Localização do usuário (opcional)
+  location?: string; // Localização do usuário
 
   @IsOptional()
   @IsString()
-  gender?: string; // Gênero do usuário (opcional)
+  gender?: string; // Gênero do usuário
 
   @IsOptional()
-  acceptsRecommendations?: boolean; // Se aceita recomendações personalizadas (opcional)
+  @IsBoolean()
+  @Transform(({ value }) => (value === undefined ? true : value))
+  acceptsRecommendations?: boolean; // Se aceita recomendações personalizadas
 }
