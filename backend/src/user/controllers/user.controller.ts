@@ -34,7 +34,7 @@ export class UserController {
    * Rota: GET /users
    */
   @Get()
-  @UseGuards(AuthGuard('jwt')) // Protege a rota com o AuthGuard do Nest
+  //@UseGuards(AuthGuard('jwt')) // Protege a rota com o AuthGuard do Nest
   async getAllUsers() {
     return this.userService.getAllUsers();
   }
