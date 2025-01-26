@@ -2,33 +2,33 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Movie {
-  @PrimaryGeneratedColumn('uuid') // ID único para cada filme
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ unique: true })
-  tmdbId: number; // ID do filme na API TMDB
+  tmdbId: number;
 
   @Column()
-  title: string; // Título do filme
+  title: string;
 
   @Column({ type: 'text' })
-  description: string; // Descrição do filme
+  overview: string;
 
   @Column()
-  releaseDate: string; // Data de lançamento do filme
+  releaseDate: string;
 
   @Column('float')
-  popularity: number; // Popularidade do filme
+  popularity: number;
 
   @Column('float')
-  voteAverage: number; // Média de votos
+  voteAverage: number;
 
   @Column()
-  voteCount: number; // Total de votos
+  voteCount: number;
 
   @Column()
-  posterPath: string; // Caminho para o pôster do filme
+  posterPath: string;
 
   @Column({ type: 'simple-array' })
-  genres: string[]; // Lista de gêneros
+  genres: string[]; // Certifique-se de que este campo está definido corretamente
 }

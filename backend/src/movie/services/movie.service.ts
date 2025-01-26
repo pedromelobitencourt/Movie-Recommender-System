@@ -1,28 +1,29 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Movie } from '../entities/movie.entity';
-import * as tfidf from 'tf-idf-similarity';
+import { Repository, ILike, Like } from 'typeorm';
+import { Movie } from './../entities/movie.entity';
 
 @Injectable()
 export class MovieService {
-  private tfidfMatrix: tfidf.Tfidf[] = []; // Matriz TF-IDF
-  private movieTitles: string[] = []; // Lista de títulos dos filmes
-
   constructor(
     @InjectRepository(Movie)
-    private readonly movieRepository: Repository<Movie>, // Repositório do banco de dados
+    private readonly movieRepository: Repository<Movie>,
   ) {}
 
   /**
-   * Busca todos os filmes
+   * Obtém todos os filmes com paginação
    */
-  async getAllMovies(): Promise<Movie[]> {
-    return this.movieRepository.find();
+  async getAllMovies(page: number, limit: number): Promise<Movie[]> {
+    const skip = (page - 1) * limit;
+    return this.movieRepository.find({
+      skip,
+      take: limit,
+      order: { popularity: 'DESC' },
+    });
   }
 
   /**
-   * Busca um filme pelo ID
+   * Obtém um filme pelo ID
    */
   async getMovieById(id: string): Promise<Movie> {
     const movie = await this.movieRepository.findOne({ where: { id } });
@@ -33,41 +34,24 @@ export class MovieService {
   }
 
   /**
-   * Inicializa a matriz TF-IDF
+   * Busca filmes por título
    */
-  async initializeSimilarityMatrix() {
-    const movies = await this.movieRepository.find();
-    const descriptions = movies.map((movie) => movie.description);
-    const tfidfVectorizer = new tfidf.TfidfVectorizer();
-    this.tfidfMatrix = tfidfVectorizer.fit(descriptions);
-    this.movieTitles = movies.map((movie) => movie.title);
+  async searchMovies(query: string): Promise<Movie[]> {
+    return this.movieRepository.find({
+      where: { title: ILike(`%${query}%`) }, // Busca por título (insensível a maiúsculas/minúsculas)
+      order: { popularity: 'DESC' },
+    });
   }
 
   /**
-   * Retorna filmes similares a um título
+   * Busca filmes por gênero
    */
-  async getSimilarMovies(movieTitle: string, topN = 3): Promise<Movie[]> {
-    if (!this.tfidfMatrix.length) {
-      await this.initializeSimilarityMatrix();
-    }
-
-    const movieIndex = this.movieTitles.indexOf(movieTitle);
-    if (movieIndex === -1) {
-      throw new NotFoundException(
-        `Filme com título "${movieTitle}" não encontrado`,
-      );
-    }
-
-    const scores = tfidf.calculateSimilarity(this.tfidfMatrix, movieIndex);
-    const rankedMovies = scores
-      .map((score, index) => ({ index, score }))
-      .sort((a, b) => b.score - a.score);
-
-    const similarMovieIndices = rankedMovies
-      .slice(1, topN + 1)
-      .map((m) => m.index);
-    return this.movieRepository.findByIds(
-      similarMovieIndices.map((i) => movies[i].id),
-    );
+  async getMoviesByGenre(genre: string): Promise<Movie[]> {
+    return this.movieRepository.find({
+      where: {
+        genres: Like(`%${genre}%`),
+      },
+      order: { popularity: 'DESC' },
+    });
   }
 }
