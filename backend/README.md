@@ -107,3 +107,9 @@ Crie o Banco de Dados `movie_db` no Postgres
 ``
 $ npm run start:dev
 ``
+
+Para popular o Banco de Dados com os filmes rode:
+
+``
+$ npm run populate:db
+``
