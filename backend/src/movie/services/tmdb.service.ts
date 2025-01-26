@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Movie } from '../entities/movie.entity';
 import { lastValueFrom } from 'rxjs';
+import { GENRE_MAPPING } from './../constants/genre-mapping';
 
 @Injectable()
 export class TmdbService {
@@ -24,19 +25,15 @@ export class TmdbService {
       console.log(
         `Buscando filmes populares da API TMDB (${pages} páginas)...`,
       );
-
       for (let page = 1; page <= pages; page++) {
         const url = `${this.baseUrl}/movie/popular?api_key=${this.apiKey}&language=en-US&page=${page}`;
         console.log(`Buscando página ${page}...`);
         const response = await lastValueFrom(this.httpService.get(url));
-
         const movies = response.data.results;
-
         for (const movie of movies) {
           const existingMovie = await this.movieRepository.findOne({
             where: { tmdbId: movie.id },
           });
-
           const movieProperties = {
             tmdbId: movie.id,
             title: movie.title,
@@ -47,7 +44,7 @@ export class TmdbService {
             voteCount: movie.vote_count,
             posterPath: movie.poster_path,
             backdropPath: movie.backdrop_path,
-            genres: movie.genre_ids.map((id: number) => id.toString()), // Convertendo IDs de gêneros para strings
+            genres: movie.genre_ids.map((id: number) => GENRE_MAPPING[id]), // Converte IDs para nomes
           };
 
           if (!existingMovie) {
