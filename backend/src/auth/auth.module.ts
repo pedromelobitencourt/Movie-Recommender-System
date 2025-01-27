@@ -9,13 +9,13 @@ import { UserModule } from 'src/user/user.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(), // Add this line
+    ConfigModule.forRoot({ isGlobal: true }), // Add this line
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>(process.env.JWT_SECRET),
-        signOptions: { expiresIn: '60m' },
+        signOptions: { expiresIn: `${process.env.JWT_EXPIRATION}` },
       }),
       inject: [ConfigService],
     }),
