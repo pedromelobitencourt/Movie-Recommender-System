@@ -4,11 +4,13 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
+  Unique,
 } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { Movie } from '../../movie/entities/movie.entity';
 
 @Entity()
+@Unique(['userId', 'movieId']) // Restrição única para evitar duplicatas
 export class UserInteraction {
   @PrimaryGeneratedColumn('uuid') // ID único para cada interação
   id: string;
