@@ -37,10 +37,10 @@ export class MovieService {
    * Busca filmes por título
    */
   async searchMovies(query: string): Promise<Movie[]> {
-    return this.movieRepository.find({
-      where: { title: ILike(`%${query}%`) }, // Busca por título (insensível a maiúsculas/minúsculas)
-      order: { popularity: 'DESC' },
-    });
+    return this.movieRepository
+      .createQueryBuilder('movie')
+      .where('movie.title ILIKE :query', { query: `%${query}%` })
+      .getMany();
   }
 
   /**

@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { BadRequestException, Controller, Get, Param, Query } from '@nestjs/common';
 import { MovieService } from './../services/movie.service';
 
 @Controller('movies') // Define o prefixo da rota (ex.: /movies)
@@ -18,20 +18,14 @@ export class MovieController {
   }
 
   /**
-   * Endpoint para obter um filme por ID
-   * Rota: GET /movies/:id
-   */
-  @Get(':id')
-  async getMovieById(@Param('id') id: string) {
-    return this.movieService.getMovieById(id);
-  }
-
-  /**
    * Endpoint para buscar filmes por título
    * Rota: GET /movies/search?query=<title>
    */
   @Get('/search')
   async searchMovies(@Query('query') query: string) {
+    if (!query) {
+      throw new BadRequestException('O parâmetro "query" é obrigatório.');
+    }
     return this.movieService.searchMovies(query);
   }
 
@@ -42,5 +36,14 @@ export class MovieController {
   @Get('/genre')
   async getMoviesByGenre(@Query('genre') genre: string) {
     return this.movieService.getMoviesByGenre(genre);
+  }
+
+  /**
+   * Endpoint para obter um filme por ID
+   * Rota: GET /movies/:id
+   */
+  @Get(':id')
+  async getMovieById(@Param('id') id: string) {
+    return this.movieService.getMovieById(id);
   }
 }
