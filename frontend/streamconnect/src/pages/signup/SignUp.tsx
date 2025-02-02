@@ -92,6 +92,7 @@ const SignUpForm: React.FC = () => {
           <Form.Group className="input-box">
             <IonIcon icon={mailOutline} />
             <Form.Control
+              className='form-text-field'
               type="email"
               name="email"
               placeholder="Email"
@@ -104,6 +105,7 @@ const SignUpForm: React.FC = () => {
           <Form.Group className="input-box">
             <IonIcon icon={lockClosedOutline} />
             <Form.Control
+              className='form-text-field'
               type="password"
               name="password"
               placeholder="Senha"
@@ -143,6 +145,7 @@ const SignUpForm: React.FC = () => {
           <Form.Group className="input-box">
             <IonIcon icon={locationOutline} />
             <Form.Control
+              className='form-text-field'
               type="text"
               name="location"
               placeholder="Localização"

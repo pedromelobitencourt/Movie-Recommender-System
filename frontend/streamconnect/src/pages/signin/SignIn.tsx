@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import { IonIcon } from '@ionic/react';
 import { mailOutline, lockClosedOutline } from 'ionicons/icons';
-import Header from '../../components/Header';
 import './SignIn.css';
 
 const SignIn: React.FC = () => {
@@ -32,33 +31,40 @@ const SignIn: React.FC = () => {
 
   return (
     <div>
-      <Header />
       <div className="wrapper">
         <div className="form-box login">
           <h2>Login</h2>
           <Form onSubmit={handleSubmit}>
             <Form.Group className="input-box">
-              <IonIcon icon={mailOutline} />
-              <Form.Control
-                type="text"
-                name="email"
-                placeholder="Email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
+              <label htmlFor="email">Email</label>
+              <div className="input-with-icon">
+                <IonIcon icon={mailOutline} className="input-icon" />
+                <Form.Control
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Digite seu email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
             </Form.Group>
 
             <Form.Group className="input-box">
-              <IonIcon icon={lockClosedOutline} />
-              <Form.Control
-                type="password"
-                name="password"
-                placeholder="Senha"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
+            <label htmlFor="password">Senha</label>
+              <div className="input-with-icon">
+                <IonIcon icon={lockClosedOutline} className="input-icon" />
+                <Form.Control
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Digite sua senha"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
             </Form.Group>
 
             <Form.Group className="remember-forgot">
