@@ -35,7 +35,7 @@ def recommend_similar_movies(movie_title, num_recommendations=5):
     similar_movies = movies[movies['cluster'] == movie_cluster]
     similar_movies = similar_movies[similar_movies['title'] != movie_title]
     
-    return similar_movies[['title', 'genres']].head(num_recommendations)
+    return similar_movies[['title']].head(num_recommendations)
 
 # Rota para recomendação de filmes
 @router.post("/clustering/recommend")
