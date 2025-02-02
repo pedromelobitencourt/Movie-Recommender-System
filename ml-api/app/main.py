@@ -1,11 +1,13 @@
 from fastapi import FastAPI
-from app.routes.prediction import router as prediction_router
+from routes.clustering import router as clustering_router
 
-app = FastAPI()
+# Inicializa a aplicação FastAPI
+app = FastAPI(title="Movie Clustering API", version="1.0")
 
-# Registrar rotas
-app.include_router(prediction_router)
+# Inclui as rotas relacionadas ao clustering
+app.include_router(clustering_router)
 
-@app.get("/")
-def read_root():
-    return {"message": "Welcome to the Recommendation API"}
+# Executar o servidor
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8111)
