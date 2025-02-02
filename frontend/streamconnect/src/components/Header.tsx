@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Navbar, Nav, Container } from 'react-bootstrap';
+import { Navbar, Container } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import './style/HeaderStyle.css';
@@ -28,19 +28,13 @@ const Header: React.FC = () => {
         fixed="top"
         className={`navbar-transparente ${scrolled ? 'scrolled' : ''}`}
       >
-        <Container>
+        <Container className="header-container">
           <Navbar.Brand href="/">
             <img src="/images/logo.png" width="68" alt="Logo" />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="nav-principal">
             <FontAwesomeIcon icon={faBars} className="text-white" />
           </Navbar.Toggle>
-          <Navbar.Collapse id="nav-principal">
-            <Nav className="ml-auto">
-              <Nav.Link href="/" className="nav-link">Home</Nav.Link>
-              <Nav.Link href="#" className="nav-link">Ajuda</Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
         </Container>
       </Navbar>
     </header>

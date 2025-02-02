@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button, Container, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import Header from '../../components/Header';
 import './Home.css';
 
 const Home: React.FC = () => {
@@ -9,7 +8,6 @@ const Home: React.FC = () => {
 
   return (
     <div className="home-container">
-      <Header />
       <section id="home">
         <Container className="h-100 d-flex align-items-center justify-content-center">
           <Row>

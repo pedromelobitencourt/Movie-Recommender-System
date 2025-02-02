@@ -2,10 +2,10 @@
 .home-container {
     flex: 1;
     flex-direction: column;
-    min-height: 100vh; /* Ocupa toda a altura da tela */
-    height: 100%;
+    height: 'auto';
     align-items: center;
     justify-content: center;
+    background: linear-gradient(to bottom, #000428, #004e92);
   }
   
   #home {
@@ -14,7 +14,7 @@
     color: white;
     display: flex;
     min-height: 100vh; /* Ocupa toda a altura da tela */
-    height: 100%;
+    height: 'auto';
     align-items: center;
     justify-content: center;
     text-align: center;
