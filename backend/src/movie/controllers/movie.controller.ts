@@ -1,4 +1,10 @@
-import { BadRequestException, Controller, Get, Param, Query } from '@nestjs/common';
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  Param,
+  Query,
+} from '@nestjs/common';
 import { MovieService } from './../services/movie.service';
 
 @Controller('movies') // Define o prefixo da rota (ex.: /movies)
@@ -43,7 +49,7 @@ export class MovieController {
    * Rota: GET /movies/:id
    */
   @Get(':id')
-  async getMovieById(@Param('id') id: string) {
+  async getMovieById(@Param('id') id: number) {
     return this.movieService.getMovieById(id);
   }
 }
