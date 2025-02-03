@@ -39,12 +39,12 @@ export class MovieController {
    * Endpoint para buscar filmes por gênero
    * Rota: GET /movies/genre?genre=<genreId>
    */
-  /*
+
+  // NÃO FUNCIONA
   @Get('/genre')
   async getMoviesByGenre(@Query('genre') genre: string) {
     return this.movieService.getMoviesByGenre(genre);
   }
-  */
 
   /**
    * Endpoint para obter um filme por ID
