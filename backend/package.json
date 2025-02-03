@@ -18,10 +18,12 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "populate:db": "ts-node -r tsconfig-paths/register src/movie/scripts/populate-database.ts",
+    "populate:db-movie": "ts-node -r tsconfig-paths/register src/movie/scripts/populate-database.ts",
+    "populate:db-user": "ts-node -r tsconfig-paths/register src/user/scripts/populate-database.ts",
     "typeorm": "typeorm-ts-node-commonjs"
   },
   "dependencies": {
+    "@faker-js/faker": "^9.4.0",
     "@nestjs/axios": "^4.0.0",
     "@nestjs/common": "^10.4.15",
     "@nestjs/config": "^4.0.0",
@@ -36,6 +38,7 @@
     "class-validator": "^0.14.1",
     "csv-parse": "^5.6.0",
     "dotenv": "^16.4.7",
+    "faker": "^6.6.6",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "pg": "^8.13.1",
