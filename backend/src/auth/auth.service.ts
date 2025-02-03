@@ -13,8 +13,8 @@ export class AuthService {
   async validateUser(email: string, password: string): Promise<any> {
     // Busca o usuário pelo e-mail
     const user = await this.userService.getUserByEmail(email);
-    const valid = await bcrypt.compare(password, user.password);
-    if (user && valid) {
+    //const valid = await bcrypt.compare(password, user.password);
+    if (user && user.password == password) {
       // Compare a senha (adapte para senhas criptografadas)
       const { password, ...result } = user;
       return result; // Retorna o usuário sem a senha
