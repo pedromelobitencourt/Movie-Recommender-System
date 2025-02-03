@@ -7,11 +7,14 @@ async function bootstrap() {
   const tmdbService = app.get(TmdbService);
 
   console.log(
-    'Iniciando a população do banco de dados com filmes populares...',
+    'Iniciando a população do banco de dados com filmes a partir do CSV...',
   );
 
+  const csvPath = './src/movie/scripts/tmdb_5000_movies.csv'; // Altere para o caminho real do CSV
+
   try {
-    await tmdbService.fetchAndSavePopularMovies();
+    // Chama o método no TmdbService para processar o CSV e popular o banco
+    await tmdbService.populateMoviesFromCsv(csvPath);
     console.log('Banco de dados populado com sucesso!');
   } catch (error) {
     console.error('Erro ao popular o banco de dados:', error.message);

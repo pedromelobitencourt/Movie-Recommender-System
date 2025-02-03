@@ -1,66 +1,92 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Movie } from '../entities/movie.entity';
+import { Movie } from './../entities/movie.entity';
+import { HttpService } from '@nestjs/axios';
+import { readFile } from 'fs/promises';
+import { parse } from 'csv-parse/sync';
 import { lastValueFrom } from 'rxjs';
-import { GENRE_MAPPING } from './../constants/genre-mapping';
 
 @Injectable()
 export class TmdbService {
-  private readonly apiKey = process.env.TMDB_API_KEY;
-  private readonly baseUrl = 'https://api.themoviedb.org/3';
+  private readonly apiKey = process.env.TMDB_API_ACCESS_TOKEN; // Certifique-se de que essa variável de ambiente está configurada
+  private readonly baseUrl = 'https://api.themoviedb.org/3/movie';
 
   constructor(
-    private readonly httpService: HttpService,
     @InjectRepository(Movie)
     private readonly movieRepository: Repository<Movie>,
+    private readonly httpService: HttpService,
   ) {}
 
-  /**
-   * Busca filmes populares de múltiplas páginas da API TMDB e salva no banco de dados.
-   */
-  async fetchAndSavePopularMovies(pages: number = 10): Promise<string> {
+  async populateMoviesFromCsv(csvPath: string): Promise<string> {
+    const errors: { id: string; title: string }[] = []; // Lista para armazenar os filmes com erro
+
     try {
-      console.log(
-        `Buscando filmes populares da API TMDB (${pages} páginas)...`,
-      );
-      for (let page = 1; page <= pages; page++) {
-        const url = `${this.baseUrl}/movie/popular?api_key=${this.apiKey}&language=en-US&page=${page}`;
-        console.log(`Buscando página ${page}...`);
-        const response = await lastValueFrom(this.httpService.get(url));
-        const movies = response.data.results;
-        for (const movie of movies) {
+      // Lê o arquivo CSV
+      const csvData = await readFile(csvPath, 'utf8');
+      const records = parse(csvData, { columns: true }); // Converte CSV para objetos JSON
+
+      for (const record of records) {
+        const tmdbId = record.id; // Coluna `id` do CSV
+        const title = record.title; // Coluna `title` do CSV
+
+        try {
           const existingMovie = await this.movieRepository.findOne({
-            where: { tmdbId: movie.id },
+            where: { tmdbId: Number(tmdbId) },
           });
-          const movieProperties = {
-            tmdbId: movie.id,
-            title: movie.title,
-            overview: movie.overview,
-            releaseDate: movie.release_date,
-            popularity: movie.popularity,
-            voteAverage: movie.vote_average,
-            voteCount: movie.vote_count,
-            posterPath: movie.poster_path,
-            backdropPath: movie.backdrop_path,
-            genres: movie.genre_ids.map((id: number) => GENRE_MAPPING[id]), // Converte IDs para nomes
-          };
 
           if (!existingMovie) {
-            const newMovie = this.movieRepository.create(movieProperties);
+            // Faz a requisição à API do TMDB
+            const url = `${this.baseUrl}/${tmdbId}`;
+            const response = await lastValueFrom(
+              this.httpService.get(url, {
+                headers: { Authorization: `Bearer ${this.apiKey}` },
+              }),
+            );
 
+            const movieData = response.data;
+
+            // Mapeia os dados retornados para a entidade
+            const newMovie = this.movieRepository.create({
+              tmdbId: movieData.id,
+              title: movieData.title,
+              overview: movieData.overview,
+              releaseDate: movieData.release_date,
+              popularity: movieData.popularity,
+              voteAverage: movieData.vote_average,
+              voteCount: movieData.vote_count,
+              posterPath: movieData.poster_path,
+              backdropPath: movieData.backdrop_path,
+              genres: movieData.genres.map(
+                (genre: { name: string }) => genre.name,
+              ), // Transforma para array de nomes de gêneros
+            });
+
+            // Salva o filme no banco de dados
             await this.movieRepository.save(newMovie);
           }
+        } catch (error) {
+          // Adiciona o filme à lista de erros
+          console.error(
+            `Erro ao processar o filme "${title}" (ID: ${tmdbId}):`,
+            error.message,
+          );
+          errors.push({ id: tmdbId, title });
         }
       }
 
-      return 'Filmes populares salvos com sucesso!';
+      // Após o loop, imprime o tamanho da lista e os filmes que deram erro
+      console.log(`Número de filmes com erro: ${errors.length}`);
+      errors.forEach((error) =>
+        console.log(`Erro - ID: ${error.id}, Título: ${error.title}`),
+      );
+
+      return 'Processamento de filmes concluído!';
     } catch (error) {
-      console.error(error);
+      console.error('Erro ao popular filmes:', error);
       throw new HttpException(
-        'Erro ao buscar filmes da API TMDB',
-        HttpStatus.BAD_REQUEST,
+        'Erro ao popular filmes a partir do CSV',
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }

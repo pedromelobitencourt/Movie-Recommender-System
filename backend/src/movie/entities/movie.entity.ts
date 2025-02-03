@@ -2,8 +2,8 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Movie {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn('increment')
+  id: number;
 
   @Column({ unique: true })
   tmdbId: number;
@@ -26,8 +26,11 @@ export class Movie {
   @Column()
   voteCount: number;
 
-  @Column()
+  @Column({ nullable: true })
   posterPath: string;
+
+  @Column({ nullable: true })
+  backdropPath: string;
 
   @Column({ type: 'simple-array' })
   genres: string[]; // Certifique-se de que este campo está definido corretamente
