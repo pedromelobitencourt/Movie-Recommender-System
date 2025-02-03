@@ -24,9 +24,12 @@ export class AuthService {
 
   async login(user: any) {
     const payload = { username: user.email, sub: user.id }; // Payload do token JWT
-    console.log("Token");
+    console.log('Token');
     return {
-      access_token: this.jwtService.sign({ payload }, { secret: process.env.JWT_SECRET }), // Gera o token JWT
+      access_token: this.jwtService.sign(
+        { payload },
+        { secret: process.env.JWT_SECRET },
+      ), // Gera o token JWT
     };
   }
 }
