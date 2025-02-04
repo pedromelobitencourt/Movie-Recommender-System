@@ -1,0 +1,84 @@
+/* SignIn.css */
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #000428, #004e92);
+  }
+  
+  .form-box.login {
+    background: transparent;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .input-box {
+    position: relative;
+    margin-bottom: 1rem;
+  }
+  
+  .input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 15px; /* Aumente a distância do ícone para a borda esquerda */
+    color: #888;
+    font-size: 1.5rem; /* Aumente o tamanho do ícone */
+  }
+
+  .input-box .icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    margin-right: 30px;
+  }
+  
+  .input-box input {
+    width: 100%;
+    padding: 10px 10px 10px 40px; /* Ajuste o padding para acomodar o ícone */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  .remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .remember-forgot a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .login-register {
+    text-align: center;
+    margin-top: 1rem;
+  }
+  
+  .login-register a {
+    color: #007bff;
+    text-decoration: none;
+  }

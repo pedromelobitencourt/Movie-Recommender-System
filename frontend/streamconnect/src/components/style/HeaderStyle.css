@@ -1,0 +1,49 @@
+/* Header.css */
+.header-container {
+    display: flex;
+    justify-content: space-between; /* Distribui os itens com espaço entre eles */
+    align-items: center; /* Centraliza verticalmente os itens */
+    width: auto; /* Garante que o container ocupe toda a largura */
+    padding: 30px; /* Espaçamento interno */
+}
+
+.navbar-transparente {
+    background-color: transparent !important; /* Fundo transparente */
+    transition: background-color 0.3s ease; /* Transição suave ao rolar a página */
+    justify-content: space-between; /* Alinhamento dos itens */
+    align-items: center; /* Alinhamento dos itens */
+
+}
+  
+.navbar-transparente.scrolled {
+    background-color: rgba(0, 0, 0, 0.8) !important; /* Fundo escuro ao rolar */
+}
+  
+.navbar-brand img {
+    width: 68px; /* Largura da logo */
+    height: auto; /* Altura automática para manter a proporção */
+}
+  
+.navbar-toggler {
+    border: none; /* Remove a borda do botão de toggle */
+}
+  
+.navbar-toggler:focus {
+    box-shadow: none; /* Remove o outline ao focar */
+}
+  
+.nav-link {
+    color: white !important; /* Cor do texto dos links */
+    font-size: 1.1rem; /* Tamanho da fonte */
+    margin: 0 10px; /* Espaçamento entre os links */
+    transition: color 0.3s ease; /* Transição suave ao passar o mouse */
+}
+  
+.nav-link:hover {
+    color: #6f42c1 !important; /* Cor ao passar o mouse */
+}
+  
+  /* Estilos para o ícone do menu toggle */
+.navbar-toggler .text-white {
+    font-size: 1.5rem; /* Tamanho do ícone */
+}

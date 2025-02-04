@@ -1,0 +1,75 @@
+/* SignUp.css */
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #000428, #004e92);
+    width: 100%;
+  }
+  
+  .form-box.register {
+    background: transparent;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 60%;
+  }
+  
+  .input-box {
+    position: relative;
+    flex-direction: row;
+  }
+  
+  .input-box .icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+  }
+  
+  .input-box input {
+    width: 50%;
+    padding: 10px 10px 10px 35px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+
+  .form-text-field {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .remember-forgot {
+    margin-bottom: 1rem;
+  }
+  
+  .btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .login-register {
+    text-align: center;
+    margin-top: 1rem;
+  }
+  
+  .login-register a {
+    color: #007bff;
+    text-decoration: none;
+  }
+
+  .basic-multi-select {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: black;
+  }
