@@ -48,10 +48,19 @@ export class MovieController {
 
   /**
    * Endpoint para obter um filme por ID
-   * Rota: GET /movies/:id
+   * Rota: GET /movies/by-id/:id
    */
-  @Get(':id')
+  @Get('by-id/:id')
   async getMovieById(@Param('id') id: number) {
     return this.movieService.getMovieById(id);
+  }
+
+  /**
+   * Endpoint para obter um filme por TMDB ID
+   * Rota: GET /movies/by-tmdb-id/:tmdbId
+   */
+  @Get('by-tmdb-id/:tmdbId')
+  async getMovieByTmdbId(@Param('tmdbId') tmdbId: number) {
+    return this.movieService.getMovieByTmdbId(tmdbId);
   }
 }

@@ -101,7 +101,7 @@ const MoviePage: React.FC = () => {
     const fetchMovie = async () => {
       try {
         // Usar o movieId da URL
-        const response = await axios.get(`http://localhost:3000/movies/${movieId}`);
+        const response = await axios.get(`http://localhost:3000/movies/by-id/${movieId}`);
         setMovie(response.data);
       } catch (error) {
         console.error('Erro ao carregar o filme:', error);

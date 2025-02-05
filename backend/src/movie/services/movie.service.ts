@@ -34,6 +34,17 @@ export class MovieService {
   }
 
   /**
+   * Obtém um filme pelo ID
+   */
+  async getMovieByTmdbId(tmdbId: number): Promise<Movie> {
+    const movie = await this.movieRepository.findOne({ where: { tmdbId } });
+    if (!movie) {
+      throw new NotFoundException(`Filme com ID ${tmdbId} não encontrado`);
+    }
+    return movie;
+  }
+
+  /**
    * Busca filmes por título
    */
   async searchMovies(query: string): Promise<Movie[]> {

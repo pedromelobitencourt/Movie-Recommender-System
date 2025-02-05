@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Form, Button } from 'react-bootstrap';
-import { personOutline, mailOutline, lockClosedOutline } from 'ionicons/icons';
+import { Form, Button, Alert, Spinner } from 'react-bootstrap';
 import { IonIcon } from '@ionic/react';
+import { personOutline, mailOutline, lockClosedOutline } from 'ionicons/icons';
 import { createUser } from '../../infra/usersDB';
 import './SignUp.css';
 
@@ -18,92 +18,112 @@ const SignUpForm: React.FC = () => {
     email: '',
     password: '',
   });
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value, type } = e.target as HTMLInputElement;
-    const checked = (e.target as HTMLInputElement).checked;
-    setFormData({
-      ...formData,
-      [name]: type === 'checkbox' ? checked : value,
-    });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
-
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Form Data:', formData);
+    setIsLoading(true);
+    setErrorMessage("");
+
     try {
-      const response = await createUser(formData) as { data: unknown };
-      console.log('Usuário criado:', response.data);
+      await createUser(formData);
       navigate('/signin');
     } catch (error) {
-      console.error('Erro ao criar usuário:', error);
+      console.error('Registration Error:', error);
+      setErrorMessage("Registration failed. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="wrapper">
       <div className="form-box register">
-        <h2>Registro</h2>
+        <h2>Create Account</h2>
+        
+        {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
+
         <Form onSubmit={handleSubmit}>
           <Form.Group className="input-box">
-            <IonIcon icon={personOutline} />
-            <Form.Control
-              type="text"
-              name="name"
-              placeholder="Nome"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
+            <label htmlFor="name">Full Name</label>
+            <div className="input-with-icon">
+              <IonIcon icon={personOutline} className="input-icon" />
+              <Form.Control
+                type="text"
+                name="name"
+                placeholder="Enter your full name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                disabled={isLoading}
+              />
+            </div>
           </Form.Group>
 
           <Form.Group className="input-box">
-            <IonIcon icon={mailOutline} />
-            <Form.Control
-              className="form-text-field"
-              type="email"
-              name="email"
-              placeholder="Email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
+            <label htmlFor="email">Email</label>
+            <div className="input-with-icon">
+              <IonIcon icon={mailOutline} className="input-icon" />
+              <Form.Control
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                disabled={isLoading}
+              />
+            </div>
           </Form.Group>
 
           <Form.Group className="input-box">
-            <IonIcon icon={lockClosedOutline} />
-            <Form.Control
-              className="form-text-field"
-              type="password"
-              name="password"
-              placeholder="Senha"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
+            <label htmlFor="password">Password</label>
+            <div className="input-with-icon">
+              <IonIcon icon={lockClosedOutline} className="input-icon" />
+              <Form.Control
+                type="password"
+                name="password"
+                placeholder="Create a password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                disabled={isLoading}
+              />
+            </div>
           </Form.Group>
 
-          {/* Regras da senha */}
           <div className="password-rules">
-            <p>A senha deve conter:</p>
+            <p>Password must contain:</p>
             <ul>
-              <li>Mínimo de 6 caracteres</li>
-              <li>Pelo menos uma letra maiúscula</li>
-              <li>Pelo menos um número</li>
-              <li>Pelo menos um caractere especial (@, #, $, etc.)</li>
+              <li>Minimum 6 characters</li>
+              <li>At least one uppercase letter</li>
+              <li>At least one number</li>
+              <li>At least one special character (@, #, $, etc.)</li>
             </ul>
           </div>
 
-          <Button type="submit" className="btn">
-            Registrar
+          <Button type="submit" className="btn" disabled={isLoading}>
+            {isLoading ? (
+              <div className="d-flex align-items-center justify-content-center">
+                <Spinner animation="border" size="sm" className="me-2" />
+                Creating Account...
+              </div>
+            ) : "Sign Up"}
           </Button>
 
           <div className="login-register">
             <p>
-              Já tem uma conta? <a href="/signin" className="login-link">Login</a>
+              Already have an account?{' '}
+              <a href="/signin" className="register-link">
+                Sign In
+              </a>
             </p>
           </div>
         </Form>
