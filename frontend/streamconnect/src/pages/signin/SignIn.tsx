@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Button, Alert, Spinner } from 'react-bootstrap';
@@ -6,10 +5,20 @@ import { IonIcon } from '@ionic/react';
 import { mailOutline, lockClosedOutline } from 'ionicons/icons';
 import './SignIn.css';
 import { useAuth } from '../../Hooks/UseAuth';
-import { login } from '../../infra/usersDB';
+import { login as loginService } from '../../infra/usersDB';
+import { jwtDecode } from 'jwt-decode';
+
+interface TokenPayload {
+  payload: {
+    username: string;
+    sub: number;
+  };
+  iat: number;
+  exp: number;
+}
 
 const SignIn: React.FC = () => {
-  const { loginAuth } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
@@ -23,14 +32,20 @@ const SignIn: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    setErrorMessage(""); // Resetando erro ao enviar formulário
+    setErrorMessage("");
 
     try {
-      const token = await login(formData);
-      await loginAuth(token.access_token);
+      const response = await loginService(formData);
+      const { access_token } = response;
+
+      const decoded = jwtDecode<TokenPayload>(access_token);
+      const userId = decoded.payload.sub;
+
+      login(access_token, userId);
       navigate('/catalog');
-    } catch (error) {
-      setErrorMessage("E-mail ou senha incorretos. Tente novamente.");
+    } catch (error: any) {
+      console.error("Login Error:", error);
+      setErrorMessage("Invalid email or password. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -39,54 +54,66 @@ const SignIn: React.FC = () => {
   return (
     <div className="wrapper">
       <div className="form-box login">
-        <h2>Login</h2>
-        
+        <h2>Sign In</h2>
+
         {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
 
         <Form onSubmit={handleSubmit}>
           <Form.Group className="input-box">
-            <label htmlFor="email">E-mail</label>
+            <label htmlFor="email">Email</label>
             <div className="input-with-icon">
               <IonIcon icon={mailOutline} className="input-icon" />
               <Form.Control
                 type="email"
                 id="email"
                 name="email"
-                placeholder="Digite seu e-mail"
+                placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleChange}
                 required
+                disabled={isLoading}
               />
             </div>
           </Form.Group>
 
           <Form.Group className="input-box">
-            <label htmlFor="password">Senha</label>
+            <label htmlFor="password">Password</label>
             <div className="input-with-icon">
               <IonIcon icon={lockClosedOutline} className="input-icon" />
               <Form.Control
                 type="password"
                 id="password"
                 name="password"
-                placeholder="Digite sua senha"
+                placeholder="Enter your password"
                 value={formData.password}
                 onChange={handleChange}
                 required
+                disabled={isLoading}
               />
             </div>
           </Form.Group>
 
           <div className="remember-forgot">
-            <a href="/forgot-password">Esqueceu a senha?</a>
+            <a href="/forgot-password">Forgot Password?</a>
           </div>
 
           <Button type="submit" className="btn" disabled={isLoading}>
-            {isLoading ? <Spinner animation="border" size="sm" /> : "Entrar"}
+            {isLoading ? (
+              <div className="d-flex align-items-center justify-content-center">
+                <Spinner animation="border" size="sm" className="me-2" />
+                Signing In...
+              </div>
+            ) : (
+              "Sign In"
+            )}
           </Button>
 
           <div className="login-register">
             <p>
-              Não tem uma conta? <a href="/signup" className="register-link">Cadastre-se</a>
+              Don't have an account?{' '}
+              <a href="/signup" className="register-link">
+                Register Now
+              </a>
             </p>
           </div>
         </Form>
