@@ -94,7 +94,7 @@ const SignIn: React.FC = () => {
           </Form.Group>
 
           <div className="remember-forgot">
-            <a href="/forgot-password">Forgot Password?</a>
+            <a href="#">Forgot Password?</a>
           </div>
 
           <Button type="submit" className="btn" disabled={isLoading}>
