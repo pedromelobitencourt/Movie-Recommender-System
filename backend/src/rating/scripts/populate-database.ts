@@ -12,17 +12,17 @@ async function bootstrap() {
     'Iniciando a população do banco de dados com ratings a partir do CSV...',
   );
 
-  const csvPath = './src/rating/scripts/ratings.csv'; // Caminho do arquivo CSV
+  const csvPath = './src/rating/scripts/ratings.csv';
 
   try {
     // Lê o arquivo CSV
     const csvData = await readFile(csvPath, 'utf8');
-    const records = parse(csvData, { columns: true }); // Converte CSV para objetos JSON
+    const records = parse(csvData, { columns: true });
 
     for (const record of records) {
-      const userId = parseInt(record.userId, 10); // Coluna `userId` do CSV
-      const movieId = parseInt(record.movieId, 10); // Coluna `movieId` do CSV
-      const rating = parseFloat(record.rating); // Coluna `rating` do CSV
+      const userId = parseInt(record.userId, 10);
+      const movieId = parseInt(record.movieId, 10);
+      const rating = parseFloat(record.rating);
 
       // Popula o banco de dados com os ratings
       try {
