@@ -17,14 +17,97 @@ interface Movie {
   genres: string[];
 }
 
+interface Rating {
+  id: number;
+  rating: number;
+}
+
+const RatingComponent: React.FC<{ movieId: number; userId: number }> = ({ movieId, userId }) => {
+  const [userRating, setUserRating] = useState<number | null>(null);
+  const [hoverRating, setHoverRating] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUserRating = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/ratings', {
+          params: { userId: 28, movieId: 371 }
+        });
+        if (response.data) {
+          setUserRating(response.data.rating);
+        }
+      } catch (error) {
+        console.error('Erro ao buscar avaliação:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserRating();
+  }, [movieId, userId]);
+
+  const handleRating = async (rating: number) => {
+    try {
+      await axios.post('http://localhost:3000/ratings', {
+        userId: 28,
+        movieId: 371,
+        rating
+      });
+      setUserRating(rating);
+    } catch (error) {
+      console.error('Erro ao salvar avaliação:', error);
+    }
+  };
+
+  const renderStars = () => {
+    const stars = [];
+    for (let i = 0; i < 10; i++) {
+      const ratingValue = (i + 1) * 0.5;
+      stars.push(
+        <div
+          key={i}
+          className={`star ${ratingValue <= (hoverRating || userRating || 0) ? 'filled' : ''}`}
+          style={{
+            display: 'inline-block',
+            width: '12px',
+            overflow: 'hidden',
+            direction: i % 2 === 0 ? 'ltr' : 'rtl',
+          }}
+          onMouseEnter={() => setHoverRating(ratingValue)}
+          onMouseLeave={() => setHoverRating(null)}
+          onClick={() => handleRating(ratingValue)}
+        >
+          ★
+        </div>
+      );
+    }
+    return stars;
+  };
+
+  if (loading) return <div>Carregando avaliação...</div>;
+
+  return (
+    <div className="rating-container">
+      <h3>Sua avaliação:</h3>
+      <div className="stars-container">
+        {renderStars()}
+        <div className="rating-value">
+          {userRating ? `(${userRating}/5)` : '(Nenhuma avaliação)'}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const MoviePage: React.FC = () => {
   const { movieId } = useParams<{ movieId: string }>();
   const [movie, setMovie] = useState<Movie | null>(null);
+  const userId = 28; // ID do usuário logado (ajustar conforme sua implementação)
 
   useEffect(() => {
     const fetchMovie = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/movies/1`);
+        const response = await axios.get(`http://localhost:3000/movies/${movieId}`);
         setMovie(response.data);
       } catch (error) {
         console.error('Erro ao carregar o filme:', error);
@@ -38,14 +121,12 @@ const MoviePage: React.FC = () => {
     return <div className="loading">Carregando...</div>;
   }
 
-  // Formatando a data
   const formattedDate = new Date(movie.releaseDate).toLocaleDateString('pt-BR', {
     day: '2-digit',
     month: 'long',
     year: 'numeric',
   });
 
-  // URLs das imagens
   const posterUrl = movie.posterPath
     ? `https://image.tmdb.org/t/p/w500${movie.posterPath}`
     : null;
@@ -59,38 +140,27 @@ const MoviePage: React.FC = () => {
       className="movie-page"
       style={{ backgroundImage: `url(${backdropUrl})`, backgroundSize: 'cover' }}
     >
-      {/* Overlay para contraste */}
       <div className="overlay">
         <div className="content">
-          {/* Poster do filme */}
           {posterUrl && (
             <div className="poster-container">
               <img src={posterUrl} alt={`${movie.title} Poster`} className="poster" />
             </div>
           )}
 
-          {/* Informações do Filme */}
           <div className="movie-info">
             <h1 className="title">{movie.title}</h1>
+            <RatingComponent movieId={Number(movieId)} userId={userId} />
             <p className="overview">{movie.overview}</p>
             <div className="details">
-              <p>
-                <strong>Data de Lançamento:</strong> {formattedDate}
-              </p>
-              <p>
-                <strong>Popularidade:</strong> {movie.popularity}
-              </p>
-              <p>
-                <strong>Nota:</strong> {movie.voteAverage} ({movie.voteCount} votos)
-              </p>
-              <p>
-                <strong>Gêneros:</strong> {movie.genres.join(', ')}
-              </p>
+              <p><strong>Data de Lançamento:</strong> {formattedDate}</p>
+              <p><strong>Popularidade:</strong> {movie.popularity}</p>
+              <p><strong>Nota:</strong> {movie.voteAverage} ({movie.voteCount} votos)</p>
+              <p><strong>Gêneros:</strong> {movie.genres.join(', ')}</p>
             </div>
           </div>
 
-          {/* Filmes Recomendados */}
-          <MovieRecommendations movieId={"Avatar"} />
+          <MovieRecommendations movieTitle={movie.title} movieId={Number(movieId)} userId={userId} />
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 .recommendations-container {
-  margin-top: 20px;
+  margin-top: 40px;
   padding: 20px;
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 15px;
@@ -56,48 +56,4 @@
 .recommendation-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-}
-
-.rating-container {
-  margin-bottom: 30px;
-  padding: 15px;
-  background-color: #f8f9fa;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.rating-container h3 {
-  margin-bottom: 10px;
-  color: #444;
-  font-size: 1.2rem;
-}
-
-.stars-container {
-  display: flex;
-  align-items: center;
-  gap: 0px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.star {
-  font-size: 24px;
-  color: #ddd;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.star.filled {
-  color: #ffd700;
-}
-
-.star:hover {
-  transform: scale(1.2);
-}
-
-.rating-value {
-  margin-left: 10px;
-  font-size: 0.9rem;
-  color: #666;
-  font-weight: bold;
 }
