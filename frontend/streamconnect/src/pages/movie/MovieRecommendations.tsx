@@ -10,24 +10,36 @@ interface Movie {
 }
 
 interface Props {
-  movieId: number;
+  userId: number;
 }
 
-const MovieRecommendations: React.FC<Props> = ({ movieId }) => {
+const MovieRecommendations: React.FC<Props> = ({ userId }) => {
   const [recommendedMovies, setRecommendedMovies] = useState<Movie[]>([]);
 
   useEffect(() => {
     const fetchRecommendations = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/movies/${movieId}/recommendations`);
-        setRecommendedMovies(response.data);
+        const response = await axios.post('http://127.0.0.1:8111/prediction/recommend', {
+          user_id: 1,
+          num_recommendations: 10,
+        });
+
+        const movies = response.data.map((movie: any) => ({
+          id: movie.id,
+          title: movie.title,
+          posterPath: movie.poster_path
+            ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+            : 'https://via.placeholder.com/200x300?text=No+Image',
+        }));
+
+        setRecommendedMovies(movies);
       } catch (error) {
         console.error('Erro ao buscar recomendações:', error);
       }
     };
 
     fetchRecommendations();
-  }, [movieId]);
+  }, [userId]);
 
   return (
     <div className="recommendations-container">
@@ -35,7 +47,7 @@ const MovieRecommendations: React.FC<Props> = ({ movieId }) => {
       <div className="recommendations-grid">
         {recommendedMovies.map((movie) => (
           <Link key={movie.id} to={`/movies/${movie.id}`} className="recommendation-card">
-            <img src={movie.posterPath || 'https://via.placeholder.com/150'} alt={movie.title} />
+            <img src={movie.posterPath} alt={movie.title} />
             <p>{movie.title}</p>
           </Link>
         ))}
