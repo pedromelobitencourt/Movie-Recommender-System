@@ -36,9 +36,10 @@ class RecommendationRequest(BaseModel):
     num_recommendations: int = 20
 
 def recommend_movies_for_user(user_id, num_recommendations=20):
-    # Verificar se o usuário está mapeado
+    print(f"ID do usuário recebido: {user_id}")
     if user_id not in user2user_encoded:
-        # Calcular as médias de avaliação considerando apenas filmes presentes no movie_df
+        print(f"Usuário {user_id} não encontrado no mapeamento.")
+        # Calcular filmes mais bem avaliados
         movie_ids_in_dataset = set(movie_df["id"])
         movie_ratings_mean = (
             ratings_df[ratings_df["movieId"].isin(movie_ids_in_dataset)]
@@ -46,46 +47,30 @@ def recommend_movies_for_user(user_id, num_recommendations=20):
             .mean()
             .sort_values(ascending=False)
         )
-
-        # Selecionar os melhores filmes
         top_movies = movie_ratings_mean.head(num_recommendations).index
         recommended_movies = movie_df[movie_df["id"].isin(top_movies)]
-
-        # Garantir que seja um DataFrame antes de chamar to_dict
         if not recommended_movies.empty:
-            return recommended_movies[['title', 'id']].head(num_recommendations)
+            return recommended_movies[['title', 'id']].head(num_recommendations).to_dict(orient="records")
         else:
             return []
 
-    # Codificar o usuário
+    # Caso o usuário esteja no mapeamento
+    print(f"Usuário {user_id} encontrado no mapeamento.")
     user_encoder = user2user_encoded[user_id]
-
-    # Filmes assistidos pelo usuário
     movies_watched_by_user = ratings_df[ratings_df.userId == user_id]
-
-    # Identificar filmes não assistidos
     movies_not_watched = movie_df[~movie_df["id"].isin(movies_watched_by_user.movieId.values)]["id"]
     movies_not_watched = list(set(movies_not_watched).intersection(set(movie2movie_encoded.keys())))
 
     if not movies_not_watched:
         raise HTTPException(status_code=404, detail="Nenhum filme disponível para recomendação.")
 
-    # Codificar filmes não assistidos
     movies_not_watched_encoded = [[movie2movie_encoded.get(x)] for x in movies_not_watched]
-
-    # Criar matriz de entrada para predição
     user_movie_array = np.hstack(
         ([[user_encoder]] * len(movies_not_watched_encoded), movies_not_watched_encoded)
     )
-
-    # Fazer predições
     ratings = model.predict(user_movie_array).flatten()
-
-    # Selecionar os melhores filmes
     top_ratings_indices = ratings.argsort()[-num_recommendations:][::-1]
     recommended_movie_ids = [movie_encoded2movie.get(movies_not_watched_encoded[x][0]) for x in top_ratings_indices]
-
-    # Obter informações dos filmes recomendados
     recommended_movies = movie_df[movie_df["id"].isin(recommended_movie_ids)]
     return recommended_movies[['title', 'id']].to_dict(orient="records")
 
@@ -100,4 +85,4 @@ def recommend_movies(request: RecommendationRequest):
     if recommendations is None:
         raise HTTPException(status_code=404, detail="Usuário não encontrado.")
     
-    return recommendations.to_dict(orient="records")
+    return recommendations
