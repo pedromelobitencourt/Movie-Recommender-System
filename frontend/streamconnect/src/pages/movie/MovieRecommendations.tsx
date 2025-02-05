@@ -101,7 +101,7 @@ const MovieRecommendations: React.FC<Props> = ({ movieTitle, movieId }) => {
 
   return (
     <div className="recommendations-container">
-      <h2>Filmes parecidos com este</h2>
+      <h2>Similar Movies</h2>
       {isLoading ? (
         <div className="loading">Carregando recomendações...</div>
       ) : (

@@ -115,7 +115,7 @@ const MoviePage: React.FC = () => {
     return <div className="loading">Carregando...</div>;
   }
 
-  const formattedDate = new Date(movie.releaseDate).toLocaleDateString('pt-BR', {
+  const formattedDate = new Date(movie.releaseDate).toLocaleDateString('en', {
     day: '2-digit',
     month: 'long',
     year: 'numeric',
@@ -144,10 +144,10 @@ const MoviePage: React.FC = () => {
             <RatingComponent movieId={Number(movieId)} userId={userId} />
             <p className="overview">{movie.overview}</p>
             <div className="details">
-              <p><strong>Data de Lançamento:</strong> {formattedDate}</p>
-              <p><strong>Popularidade:</strong> {movie.popularity}</p>
-              <p><strong>Nota:</strong> {movie.voteAverage} ({movie.voteCount} votos)</p>
-              <p><strong>Gêneros:</strong> {movie.genres.join(', ')}</p>
+              <p><strong>Release Date:</strong> {formattedDate}</p>
+              <p><strong>Popularity:</strong> {movie.popularity}</p>
+              <p><strong>Rating:</strong> {movie.voteAverage} ({movie.voteCount} votes)</p>
+              <p><strong>Genres:</strong> {movie.genres.join(', ')}</p>
             </div>
           </div>
 
