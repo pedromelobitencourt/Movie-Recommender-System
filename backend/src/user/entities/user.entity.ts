@@ -1,19 +1,24 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Rating } from '../../rating/entities/rating.entity';
 
-@Entity() // Indica que esta classe é uma entidade do banco de dados
+@Entity()
 export class User {
-  @PrimaryGeneratedColumn('increment') // Chave primária gerada automaticamente
+  @PrimaryGeneratedColumn('increment')
   id: string;
 
-  @Column() // Nome do usuário
+  @Column()
   name: string;
 
-  @Column({ unique: true }) // E-mail do usuário (único)
+  @Column({ unique: true })
   email: string;
 
-  @Column() // Senha do usuário
+  @Column()
   password: string;
 
-  @Column({ default: () => 'CURRENT_TIMESTAMP' }) // Data de criação
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
+
+  // Relacionamento com a entidade Rating
+  @OneToMany(() => Rating, (rating) => rating.user)
+  ratings: Rating[];
 }
