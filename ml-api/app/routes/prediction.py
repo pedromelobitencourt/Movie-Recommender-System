@@ -17,11 +17,14 @@ router = APIRouter()
 movie_df = pd.read_csv('./../model/data/tmdb_5000_movies.csv')
 ratings_df = pd.read_csv('./../model/data/ratings.csv')
 
-# Dicionários de mapeamento
-movie2movie_encoded = {row.id: idx for idx, row in movie_df.iterrows()}
-movie_encoded2movie = {idx: row.id for idx, row in movie_df.iterrows()}
-user2user_encoded = {row.userId: idx for idx, row in ratings_df.iterrows()}
-user_encoded2user = {idx: row.userId for idx, row in ratings_df.iterrows()}
+# Mapeamento de usuários e filmes
+user_ids = ratings_df["userId"].unique().tolist()
+user2user_encoded = {x: i for i, x in enumerate(user_ids)}
+user_encoded2user = {i: x for i, x in enumerate(user_ids)}
+
+movie_ids = movie_df["id"].unique().tolist()
+movie2movie_encoded = {x: i for i, x in enumerate(movie_ids)}
+movie_encoded2movie = {i: x for i, x in enumerate(movie_ids)}
 
 # Carregar o modelo de recomendação
 MODEL_PATH = "./../model/saved_models/movie_recommender.keras"
