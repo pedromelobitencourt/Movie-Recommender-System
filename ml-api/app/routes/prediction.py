@@ -35,10 +35,30 @@ class RecommendationRequest(BaseModel):
     user_id: int
     num_recommendations: int = 20
 
-# Função para gerar recomendações com base no usuário
 def recommend_movies_for_user(user_id, num_recommendations=20):
-    if user_id not in ratings_df.userId.values:
-        return None  # Usuário não encontrado
+    # Verificar se o usuário está mapeado
+    if user_id not in user2user_encoded:
+        # Calcular as médias de avaliação considerando apenas filmes presentes no movie_df
+        movie_ids_in_dataset = set(movie_df["id"])
+        movie_ratings_mean = (
+            ratings_df[ratings_df["movieId"].isin(movie_ids_in_dataset)]
+            .groupby("movieId")["rating"]
+            .mean()
+            .sort_values(ascending=False)
+        )
+
+        # Selecionar os melhores filmes
+        top_movies = movie_ratings_mean.head(num_recommendations).index
+        recommended_movies = movie_df[movie_df["id"].isin(top_movies)]
+
+        # Garantir que seja um DataFrame antes de chamar to_dict
+        if not recommended_movies.empty:
+            return recommended_movies[['title', 'id']].head(num_recommendations)
+        else:
+            return []
+
+    # Codificar o usuário
+    user_encoder = user2user_encoded[user_id]
 
     # Filmes assistidos pelo usuário
     movies_watched_by_user = ratings_df[ratings_df.userId == user_id]
@@ -46,14 +66,16 @@ def recommend_movies_for_user(user_id, num_recommendations=20):
     # Identificar filmes não assistidos
     movies_not_watched = movie_df[~movie_df["id"].isin(movies_watched_by_user.movieId.values)]["id"]
     movies_not_watched = list(set(movies_not_watched).intersection(set(movie2movie_encoded.keys())))
-    movies_not_watched = [[movie2movie_encoded.get(x)] for x in movies_not_watched]
 
-    # Codificar o usuário
-    user_encoder = user2user_encoded.get(user_id)
+    if not movies_not_watched:
+        raise HTTPException(status_code=404, detail="Nenhum filme disponível para recomendação.")
+
+    # Codificar filmes não assistidos
+    movies_not_watched_encoded = [[movie2movie_encoded.get(x)] for x in movies_not_watched]
 
     # Criar matriz de entrada para predição
     user_movie_array = np.hstack(
-        ([[user_encoder]] * len(movies_not_watched), movies_not_watched)
+        ([[user_encoder]] * len(movies_not_watched_encoded), movies_not_watched_encoded)
     )
 
     # Fazer predições
@@ -61,11 +83,11 @@ def recommend_movies_for_user(user_id, num_recommendations=20):
 
     # Selecionar os melhores filmes
     top_ratings_indices = ratings.argsort()[-num_recommendations:][::-1]
-    recommended_movie_ids = [movie_encoded2movie.get(movies_not_watched[x][0]) for x in top_ratings_indices]
+    recommended_movie_ids = [movie_encoded2movie.get(movies_not_watched_encoded[x][0]) for x in top_ratings_indices]
 
     # Obter informações dos filmes recomendados
     recommended_movies = movie_df[movie_df["id"].isin(recommended_movie_ids)]
-    return recommended_movies[['title', 'id']]
+    return recommended_movies[['title', 'id']].to_dict(orient="records")
 
 # Rota para recomendação de filmes
 @router.post("/prediction/recommend")
