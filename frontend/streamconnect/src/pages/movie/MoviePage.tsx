@@ -90,7 +90,7 @@ const MoviePage: React.FC = () => {
           </div>
 
           {/* Filmes Recomendados */}
-          <MovieRecommendations movieId={1} />
+          <MovieRecommendations movieId={"Avatar"} />
         </div>
       </div>
     </div>

@@ -1,10 +1,11 @@
 .recommendations-container {
     margin-top: 20px;
     padding: 20px;
-    background-color: #f9f9f9;
+    background-color: rgba(255, 255, 255, 0.9);
     border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
+    width: 100%;
   }
   
   .recommendations-container h2 {
@@ -16,9 +17,10 @@
   
   .recommendations-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 20px;
-    justify-items: center;
+    justify-content: center;
+    width: 100%;
   }
   
   .recommendation-card {
@@ -31,13 +33,12 @@
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     width: 100%;
-    max-width: 200px;
     padding: 10px;
   }
   
   .recommendation-card img {
     width: 100%;
-    height: 300px;
+    height: 270px;
     object-fit: cover;
     border-radius: 8px;
     margin-bottom: 10px;
@@ -56,4 +57,3 @@
     transform: translateY(-5px);
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
   }
-  

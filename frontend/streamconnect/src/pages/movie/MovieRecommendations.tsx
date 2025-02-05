@@ -10,40 +10,52 @@ interface Movie {
 }
 
 interface Props {
-  userId: number;
+  movieTitle: string;
 }
 
-const MovieRecommendations: React.FC<Props> = ({ userId }) => {
+const MovieRecommendations: React.FC<Props> = ({ movieTitle }) => {
   const [recommendedMovies, setRecommendedMovies] = useState<Movie[]>([]);
 
   useEffect(() => {
     const fetchRecommendations = async () => {
       try {
-        const response = await axios.post('http://127.0.0.1:8111/prediction/recommend', {
-          user_id: 1,
+        const response = await axios.post('http://127.0.0.1:8111/clustering/recommend', {
+          title: "Avatar",
           num_recommendations: 10,
         });
 
-        const movies = response.data.map((movie: any) => ({
-          id: movie.id,
-          title: movie.title,
-          posterPath: movie.poster_path
-            ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-            : 'https://via.placeholder.com/200x300?text=No+Image',
-        }));
-
-        setRecommendedMovies(movies);
+        const detailedMovies = await Promise.all(
+          response.data.map(async (movie: any) => {
+            try {
+              const movieSearchResponse = await axios.get(
+                `http://localhost:3000/movies/search?query=${encodeURIComponent(movie.title)}`
+              );
+              const movieData = movieSearchResponse.data[0];
+              return {
+                id: movieData.id,
+                title: movieData.title,
+                posterPath: movieData.posterPath
+                  ? `https://image.tmdb.org/t/p/w500${movieData.posterPath}`
+                  : 'https://via.placeholder.com/200x300?text=No+Image',
+              };
+            } catch (error) {
+              console.error(`Erro ao carregar informações do filme "${movie.title}"`, error);
+              return null;
+            }
+          })
+        );
+        setRecommendedMovies(detailedMovies.filter((movie) => movie !== null));
       } catch (error) {
         console.error('Erro ao buscar recomendações:', error);
       }
     };
 
     fetchRecommendations();
-  }, [userId]);
+  }, [movieTitle]);
 
   return (
     <div className="recommendations-container">
-      <h2>Filmes Recomendados</h2>
+      <h2>Filmes parecidos com este</h2>
       <div className="recommendations-grid">
         {recommendedMovies.map((movie) => (
           <Link key={movie.id} to={`/movies/${movie.id}`} className="recommendation-card">
