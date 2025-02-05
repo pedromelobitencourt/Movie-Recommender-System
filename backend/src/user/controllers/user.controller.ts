@@ -44,7 +44,7 @@ export class UserController {
    * Rota: GET /users/:id
    */
   @Get(':id')
-  async getUserById(@Param('id') id: string) {
+  async getUserById(@Param('id') id: number) {
     return this.userService.getUserById(id);
   }
 
@@ -63,7 +63,7 @@ export class UserController {
    */
   @Put(':id')
   async updateUser(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() updateUserDto: UpdateUserDto,
   ) {
     return this.userService.updateUser(id, updateUserDto);

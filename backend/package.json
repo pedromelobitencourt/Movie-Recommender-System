@@ -20,6 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "populate:db-movie": "ts-node -r tsconfig-paths/register src/movie/scripts/populate-database.ts",
     "populate:db-user": "ts-node -r tsconfig-paths/register src/user/scripts/populate-database.ts",
+    "populate:db-rating": "ts-node -r tsconfig-paths/register src/rating/scripts/populate-database.ts",
     "typeorm": "typeorm-ts-node-commonjs"
   },
   "dependencies": {

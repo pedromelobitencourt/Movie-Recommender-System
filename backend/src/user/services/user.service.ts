@@ -36,7 +36,7 @@ export class UserService {
   /**
    * Retorna um usuário pelo ID
    */
-  async getUserById(id: string): Promise<User> {
+  async getUserById(id: number): Promise<User> {
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException(`Usuário com ID ${id} não encontrado`);
@@ -61,7 +61,7 @@ export class UserService {
   /**
    * Atualiza um usuário pelo ID
    */
-  async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+  async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.getUserById(id); // Garante que o usuário existe
     Object.assign(user, updateUserDto); // Atualiza os campos do usuário
     return this.userRepository.save(user); // Salva as alterações no banco

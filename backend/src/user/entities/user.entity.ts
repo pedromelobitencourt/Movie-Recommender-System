@@ -4,7 +4,7 @@ import { Rating } from '../../rating/entities/rating.entity';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn('increment')
-  id: string;
+  id: number;
 
   @Column()
   name: string;
