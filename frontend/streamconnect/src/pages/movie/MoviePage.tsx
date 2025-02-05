@@ -17,11 +17,6 @@ interface Movie {
   genres: string[];
 }
 
-interface Rating {
-  id: number;
-  rating: number;
-}
-
 const RatingComponent: React.FC<{ movieId: number; userId: number }> = ({ movieId, userId }) => {
   const [userRating, setUserRating] = useState<number | null>(null);
   const [hoverRating, setHoverRating] = useState<number | null>(null);
@@ -31,7 +26,7 @@ const RatingComponent: React.FC<{ movieId: number; userId: number }> = ({ movieI
     const fetchUserRating = async () => {
       try {
         const response = await axios.get('http://localhost:3000/ratings', {
-          params: { userId: 28, movieId: 371 }
+          params: { userId, movieId } // Usar props dinâmicas
         });
         if (response.data) {
           setUserRating(response.data.rating);
@@ -49,8 +44,8 @@ const RatingComponent: React.FC<{ movieId: number; userId: number }> = ({ movieI
   const handleRating = async (rating: number) => {
     try {
       await axios.post('http://localhost:3000/ratings', {
-        userId: 28,
-        movieId: 371,
+        userId,    // Usar prop userId
+        movieId,   // Usar prop movieId
         rating
       });
       setUserRating(rating);
@@ -60,10 +55,9 @@ const RatingComponent: React.FC<{ movieId: number; userId: number }> = ({ movieI
   };
 
   const renderStars = () => {
-    const stars = [];
-    for (let i = 0; i < 10; i++) {
+    return [...Array(10)].map((_, i) => {
       const ratingValue = (i + 1) * 0.5;
-      stars.push(
+      return (
         <div
           key={i}
           className={`star ${ratingValue <= (hoverRating || userRating || 0) ? 'filled' : ''}`}
@@ -80,8 +74,7 @@ const RatingComponent: React.FC<{ movieId: number; userId: number }> = ({ movieI
           ★
         </div>
       );
-    }
-    return stars;
+    });
   };
 
   if (loading) return <div>Carregando avaliação...</div>;
@@ -102,11 +95,12 @@ const RatingComponent: React.FC<{ movieId: number; userId: number }> = ({ movieI
 const MoviePage: React.FC = () => {
   const { movieId } = useParams<{ movieId: string }>();
   const [movie, setMovie] = useState<Movie | null>(null);
-  const userId = 28; // ID do usuário logado (ajustar conforme sua implementação)
+  const userId = 28; // Deve vir de um contexto de autenticação
 
   useEffect(() => {
     const fetchMovie = async () => {
       try {
+        // Usar o movieId da URL
         const response = await axios.get(`http://localhost:3000/movies/${movieId}`);
         setMovie(response.data);
       } catch (error) {
@@ -114,7 +108,7 @@ const MoviePage: React.FC = () => {
       }
     };
 
-    fetchMovie();
+    if (movieId) fetchMovie();
   }, [movieId]);
 
   if (!movie) {
@@ -136,10 +130,7 @@ const MoviePage: React.FC = () => {
     : null;
 
   return (
-    <div
-      className="movie-page"
-      style={{ backgroundImage: `url(${backdropUrl})`, backgroundSize: 'cover' }}
-    >
+    <div className="movie-page" style={{ backgroundImage: `url(${backdropUrl})` }}>
       <div className="overlay">
         <div className="content">
           {posterUrl && (
@@ -160,7 +151,11 @@ const MoviePage: React.FC = () => {
             </div>
           </div>
 
-          <MovieRecommendations movieTitle={movie.title} movieId={Number(movieId)} userId={userId} />
+          <MovieRecommendations 
+            movieTitle={movie.title} 
+            movieId={Number(movieId)} 
+            userId={userId} 
+          />
         </div>
       </div>
     </div>

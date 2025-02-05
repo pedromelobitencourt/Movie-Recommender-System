@@ -61,7 +61,7 @@ const MovieRecommendations: React.FC<Props> = ({ movieTitle, movieId }) => {
       <h2>Filmes parecidos com este</h2>
       <div className="recommendations-grid">
         {recommendedMovies.map((movie) => (
-          <Link key={movie.id} to={`/movies/${movie.id}`} className="recommendation-card">
+          <Link key={movie.id} to={`/movie/${movie.id}`} className="recommendation-card">
             <img src={movie.posterPath} alt={movie.title} />
             <p>{movie.title}</p>
           </Link>
