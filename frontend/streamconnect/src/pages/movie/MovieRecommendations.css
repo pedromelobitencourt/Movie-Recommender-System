@@ -1,0 +1,44 @@
+/* MovieRecommendations.css */
+.recommendations-container {
+    margin-top: 30px;
+  }
+  
+  .recommendations-container h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .recommendations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+  }
+  
+  .recommendation-card {
+    text-decoration: none;
+    color: black;
+    text-align: center;
+    border-radius: 8px;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .recommendation-card:hover {
+    transform: scale(1.05);
+  }
+  
+  .recommendation-card img {
+    width: 100%;
+    border-radius: 8px;
+  }
+  
+  .recommendation-card p {
+    font-size: 0.9rem;
+    margin-top: 5px;
+  }
+  
+  @media (max-width: 768px) {
+    .recommendations-grid {
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    }
+  }
+  
