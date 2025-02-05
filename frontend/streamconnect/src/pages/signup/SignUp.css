@@ -73,3 +73,27 @@
     border-radius: 5px;
     background-color: black;
   }
+
+  .password-rules {
+    font-size: 0.9rem;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+  }
+  
+  .password-rules p {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .password-rules ul {
+    padding-left: 20px;
+    margin: 0;
+  }
+  
+  .password-rules li {
+    list-style-type: disc;
+  }
+  

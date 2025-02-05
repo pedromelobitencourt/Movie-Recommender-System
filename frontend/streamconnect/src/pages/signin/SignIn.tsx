@@ -1,17 +1,24 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import { IonIcon } from '@ionic/react';
 import { mailOutline, lockClosedOutline } from 'ionicons/icons';
 import './SignIn.css';
+import { useAuth } from '../../Hooks/UseAuth';
+import { login } from '../../infra/usersDB';
+
 
 const SignIn: React.FC = () => {
+  const { loginAuth } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    rememberMe: false,
   });
+  const [userLogin, setUserLogin] = useState(false);
+  const [userLoginError, setUserLoginError] = useState(false);
+  const [customError, setCustomError] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -21,12 +28,21 @@ const SignIn: React.FC = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log('Form Data:', formData);
-    // Aqui você pode adicionar a lógica para enviar os dados para o backend
-    // Exemplo: autenticação e redirecionamento para a página de dashboard
-    navigate('/dashboard');
+    try {
+    setUserLogin(true);
+    const token = await login(formData);
+    await loginAuth(token.access_token);
+    navigate('/catalog');
+    setUserLogin(false);
+    } catch (error: unknown) {
+      setCustomError((error as Error).message);
+      setUserLoginError(true);
+    } finally {
+      setUserLogin(false);
+    }
   };
 
   return (
@@ -67,18 +83,7 @@ const SignIn: React.FC = () => {
               </div>
             </Form.Group>
 
-            <Form.Group className="remember-forgot">
-              <Form.Check
-                type="checkbox"
-                label="Lembrar de mim"
-                name="rememberMe"
-                checked={formData.rememberMe}
-                onChange={handleChange}
-              />
-              <a href="#">Esqueceu a senha?</a>
-            </Form.Group>
-
-            <Button type="submit" className="btn">
+            <Button type="submit" className="btn" disabled={userLogin}>
               Login
             </Button>
 

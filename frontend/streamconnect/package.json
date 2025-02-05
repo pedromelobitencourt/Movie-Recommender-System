@@ -13,6 +13,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@ionic/react": "^8.4.3",
+    "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
     "ionicons": "^7.4.0",
     "mdb-react-ui-kit": "^9.0.0",
