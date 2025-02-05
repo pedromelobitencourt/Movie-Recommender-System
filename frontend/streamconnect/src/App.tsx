@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Header from './components/Header';
+import Header from './components/Header/Header';
 import Home from './pages/home/Home';
 import SignUpForm from './pages/signup/SignUp';
 import SignIn from './pages/signin/SignIn';
@@ -9,7 +9,6 @@ import MoviePage from './pages/movie/MoviePage';
 
 function App() {
   return (
-    <Router>
       <div>
         <Header />
         <Routes>
@@ -20,7 +19,6 @@ function App() {
           <Route path="/movie/:movieId" element={<MoviePage />} />
         </Routes>
       </div>
-    </Router>
   );
 }
 
