@@ -53,6 +53,8 @@ user_encoder.fit(users["id"])
 movie_encoder = LabelEncoder()
 movie_encoder.fit(movies["movieId"])
 
+@app
+
 @app.post("/predict")
 def predict(data: PredictionRequest):
     try:
