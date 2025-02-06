@@ -92,8 +92,8 @@ const Header: React.FC = () => {
                   className="menu-item"
                   aria-label="Logout"
                 >
-                  <FontAwesomeIcon icon={faSignOutAlt} className="menu-item-icon" />
-                  <span className="menu-item-text">Sign Out</span>
+                  <FontAwesomeIcon icon={faSignOutAlt} className="menu-item-icon signout" />
+                  <span className="menu-item-text signout">Sign Out</span>
                 </button>
               </div>
             </div>
