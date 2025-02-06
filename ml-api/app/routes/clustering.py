@@ -49,3 +49,13 @@ def recommend_movies(request: MovieRequest):
         raise HTTPException(status_code=404, detail="Filme não encontrado.")
     
     return recommendations.to_dict(orient="records")
+
+# Rota GET que utiliza valores fixos
+@router.get("/clustering/recommend/default")
+def recommend_default_movies():
+    """
+    Rota GET que recomenda filmes usando valores fixos.
+    """
+    # Valores fixos
+    request = MovieRequest(title="The Godfather", num_recommendations=30)
+    return recommend_movies(request)
