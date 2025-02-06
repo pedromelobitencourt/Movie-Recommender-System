@@ -15,7 +15,3 @@ app.add_middleware(
     allow_methods=["*"],  # Permite todos os métodos HTTP
     allow_headers=["*"],  # Permite todos os cabeçalhos
 )
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8111)

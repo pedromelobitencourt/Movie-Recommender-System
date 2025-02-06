@@ -7,7 +7,7 @@ import './MovieRecommendations.css';
 interface Movie {
   id: number;
   title: string;
-  posterPath: string;
+  posterpath: string;
 }
 
 interface Props {
@@ -58,8 +58,8 @@ const MovieRecommendations: React.FC<Props> = ({ movieTitle }) => {
               return {
                 id: movieData.id,
                 title: movieData.title,
-                posterPath: movieData.posterPath
-                  ? `https://image.tmdb.org/t/p/w500${movieData.posterPath}`
+                posterpath: movieData.posterpath
+                  ? `https://image.tmdb.org/t/p/w500${movieData.posterpath}`
                   : 'https://via.placeholder.com/200x300?text=No+Image',
               };
             } catch (error) {
@@ -115,7 +115,7 @@ const MovieRecommendations: React.FC<Props> = ({ movieTitle }) => {
               className="recommendation-card"
               onClick={() => handleMovieClick(movie.id)}
             >
-              <img src={movie.posterPath} alt={movie.title} />
+              <img src={movie.posterpath} alt={movie.title} />
               <p>{movie.title}</p>
             </div>
           ))}

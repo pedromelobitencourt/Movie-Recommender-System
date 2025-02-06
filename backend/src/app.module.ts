@@ -11,15 +11,15 @@ import { RatingModule } from './rating/rating.module';
     ConfigModule.forRoot({
       isGlobal: true, // Torna as variáveis globais na aplicação
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        url: configService.get<string>('DATABASE_URL'),
-        autoLoadEntities: true,
-        synchronize: true, // Para produção, use `false` e execute migrations
-      }),
-      inject: [ConfigService],
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: process.env.PGHOST,
+      port: parseInt(process.env.PGPORT, 10),
+      username: process.env.PGUSER,
+      password: process.env.PGPASSWORD,
+      database: process.env.PGDATABASE,
+      autoLoadEntities: true,
+      synchronize: false, // Em produção, considere usar migrations em vez de synchronize
     }),
     UserModule,
     AuthModule,

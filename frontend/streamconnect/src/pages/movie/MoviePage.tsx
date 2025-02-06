@@ -8,12 +8,12 @@ interface Movie {
   id: number;
   title: string;
   overview: string;
-  releaseDate: string;
+  releasedate: string;
   popularity: number;
-  voteAverage: number;
-  voteCount: number;
-  posterPath: string;
-  backdropPath: string;
+  voteaverage: number;
+  votecount: number;
+  posterpath: string;
+  backdroppath: string;
   genres: string[];
 }
 
@@ -115,18 +115,18 @@ const MoviePage: React.FC = () => {
     return <div className="loading">Carregando...</div>;
   }
 
-  const formattedDate = new Date(movie.releaseDate).toLocaleDateString('en', {
+  const formattedDate = new Date(movie.releasedate).toLocaleDateString('en', {
     day: '2-digit',
     month: 'long',
     year: 'numeric',
   });
 
-  const posterUrl = movie.posterPath
-    ? `https://image.tmdb.org/t/p/w500${movie.posterPath}`
+  const posterUrl = movie.posterpath
+    ? `https://image.tmdb.org/t/p/w500${movie.posterpath}`
     : null;
 
-  const backdropUrl = movie.backdropPath
-    ? `https://image.tmdb.org/t/p/original${movie.backdropPath}`
+  const backdropUrl = movie.backdroppath
+    ? `https://image.tmdb.org/t/p/original${movie.backdroppath}`
     : null;
 
   return (
@@ -146,7 +146,7 @@ const MoviePage: React.FC = () => {
             <div className="details">
               <p><strong>Release Date:</strong> {formattedDate}</p>
               <p><strong>Popularity:</strong> {movie.popularity}</p>
-              <p><strong>Rating:</strong> {movie.voteAverage} ({movie.voteCount} votes)</p>
+              <p><strong>Rating:</strong> {movie.voteaverage} ({movie.votecount} votes)</p>
               <p><strong>Genres:</strong> {movie.genres.join(', ')}</p>
             </div>
           </div>

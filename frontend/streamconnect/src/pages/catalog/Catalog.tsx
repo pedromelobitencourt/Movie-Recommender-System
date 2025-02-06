@@ -7,7 +7,7 @@ import './Catalog.css';
 interface Movie {
   id: number;
   title: string;
-  posterPath: string;
+  posterpath: string;
 }
 
 const Catalog: React.FC = () => {
@@ -40,8 +40,8 @@ const Catalog: React.FC = () => {
               return {
                 id: movieDetails.id,
                 title: movieDetails.title,
-                posterPath: movieDetails.posterPath
-                  ? `https://image.tmdb.org/t/p/w500${movieDetails.posterPath}`
+                posterpath: movieDetails.posterpath
+                  ? `https://image.tmdb.org/t/p/w500${movieDetails.posterpath}`
                   : 'https://via.placeholder.com/200x300?text=No+Image',
               };
             } catch (error) {
@@ -75,8 +75,8 @@ const Catalog: React.FC = () => {
         const movies = response.data.map((movie: any) => ({
           id: movie.id,
           title: movie.title,
-          posterPath: movie.posterPath
-            ? `https://image.tmdb.org/t/p/w500${movie.posterPath}`
+          posterpath: movie.posterpath
+            ? `https://image.tmdb.org/t/p/w500${movie.posterpath}`
             : 'https://via.placeholder.com/200x300?text=No+Image',
         }));
         setCatalogMovies(movies);
@@ -93,7 +93,7 @@ const Catalog: React.FC = () => {
   const renderMovies = (movies: Movie[]) => {
     return movies.map((movie) => (
       <div key={movie.id} className="movie-card" onClick={() => handleMovieClick(movie.id)}>
-        <img src={movie.posterPath} alt={movie.title} />
+        <img src={movie.posterpath} alt={movie.title} />
         <p>{movie.title}</p>
       </div>
     ));

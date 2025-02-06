@@ -7,7 +7,7 @@ export class Movie {
   id: number;
 
   @Column({ unique: true })
-  tmdbId: number;
+  tmdbid: number;
 
   @Column()
   title: string;
@@ -16,22 +16,22 @@ export class Movie {
   overview: string;
 
   @Column()
-  releaseDate: string;
+  releasedate: string;
 
   @Column('float')
   popularity: number;
 
   @Column('float')
-  voteAverage: number;
+  voteaverage: number;
 
   @Column()
-  voteCount: number;
+  votecount: number;
 
   @Column({ nullable: true })
-  posterPath: string;
+  posterpath: string;
 
   @Column({ nullable: true })
-  backdropPath: string;
+  backdroppath: string;
 
   @Column({ type: 'simple-array' })
   genres: string[];

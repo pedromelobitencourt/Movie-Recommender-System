@@ -32,7 +32,7 @@ export class TmdbService {
 
         try {
           const existingMovie = await this.movieRepository.findOne({
-            where: { tmdbId: Number(tmdbId) },
+            where: { tmdbid: Number(tmdbId) },
           });
 
           if (!existingMovie) {
@@ -48,15 +48,15 @@ export class TmdbService {
 
             // Mapeia os dados retornados para a entidade
             const newMovie = this.movieRepository.create({
-              tmdbId: movieData.id,
+              tmdbid: movieData.id,
               title: movieData.title,
               overview: movieData.overview,
-              releaseDate: movieData.release_date,
+              releasedate: movieData.release_date,
               popularity: movieData.popularity,
-              voteAverage: movieData.vote_average,
-              voteCount: movieData.vote_count,
-              posterPath: movieData.poster_path,
-              backdropPath: movieData.backdrop_path,
+              voteaverage: movieData.vote_average,
+              votecount: movieData.vote_count,
+              posterpath: movieData.poster_path,
+              backdroppath: movieData.backdrop_path,
               genres: movieData.genres.map(
                 (genre: { name: string }) => genre.name,
               ), // Transforma para array de nomes de gêneros
