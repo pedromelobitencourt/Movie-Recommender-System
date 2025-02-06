@@ -1,18 +1,39 @@
-import React, { useEffect, useState } from 'react';
-import { Navbar, Container } from 'react-bootstrap';
+// Header.tsx
+import React, { useEffect, useState, useRef } from 'react';
+import { Navbar, Container, Nav } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faSignOutAlt, faHome, faFilm } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from '../../Hooks/UseAuth';
+import { Link, useNavigate } from 'react-router-dom';
 import './HeaderStyle.css';
 
 const Header: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const { user, logout } = useAuth();
+  const { username, logout, isAuthenticated } = useAuth();
+  const menuRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
-  const handleClickLogout = () => {
-    logout();
+  console.log("***************************************************************");
+  console.log(username);
+  console.log("***************************************************************");
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      setMenuOpen(false);
+    }
   };
+
+  const handleLogout = () => {
+    logout();
+    setMenuOpen(false);
+    navigate('/signin');
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,33 +48,54 @@ const Header: React.FC = () => {
     <header>
       <Navbar
         bg="transparent"
-        expand="md"
+        expand="lg"
         fixed="top"
         className={`navbar-transparente ${scrolled ? 'scrolled' : ''}`}
       >
         <Container className="header-container">
-          <Navbar.Brand href={user ? "/catalog" : "/"}>
-            <img src="/images/logo.png" width="68" alt="Logo" />
+          <Navbar.Brand as={Link} to="/" className="brand-container">
+            <img src="/images/logo.png" alt="StreamConnect Logo" className="brand-logo" />
+            <span className="brand-text">StreamConnect</span>
           </Navbar.Brand>
 
-          <h1 className="text">StreamConnect</h1>
+          <Nav className="main-navigation">
+            {isAuthenticated && (
+              <>
+                <Nav.Link as={Link} to="/catalog" className="nav-link">
+                  <FontAwesomeIcon icon={faFilm} className="nav-icon" />
+                  Catalog
+                </Nav.Link>
+                <Nav.Link as={Link} to="/" className="nav-link">
+                  <FontAwesomeIcon icon={faHome} className="nav-icon" />
+                  Home
+                </Nav.Link>
+              </>
+            )}
+          </Nav>
 
-          {user && (
-            <div className="menu-container">
-              <FontAwesomeIcon
-                icon={faBars}
-                className="menu-icon text-white"
+          {isAuthenticated && (
+            <div className="menu-container" ref={menuRef}>
+              <button 
+                className={`menu-toggle ${menuOpen ? 'active' : ''}`}
                 onClick={() => setMenuOpen(!menuOpen)}
-              />
+                aria-label="User menu"
+              >
+                <FontAwesomeIcon icon={faBars} className="menu-icon" />
+              </button>
 
-              {/* Menu dropdown */}
-              {menuOpen && (
-                <div className="menu-dropdown">
-                  <button onClick={handleClickLogout} className="menu-item">
-                    <FontAwesomeIcon icon={faSignOutAlt} className="menu-icon" /> Sair
-                  </button>
+              <div className={`menu-dropdown ${menuOpen ? 'open' : ''}`}>
+                <div className="user-info">
+                  <span className="user-name">{username}</span>
                 </div>
-              )}
+                <button 
+                  onClick={handleLogout} 
+                  className="menu-item"
+                  aria-label="Logout"
+                >
+                  <FontAwesomeIcon icon={faSignOutAlt} className="menu-item-icon signout" />
+                  <span className="menu-item-text signout">Sign Out</span>
+                </button>
+              </div>
             </div>
           )}
         </Container>

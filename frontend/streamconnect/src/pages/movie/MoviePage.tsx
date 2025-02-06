@@ -77,15 +77,15 @@ const RatingComponent: React.FC<{ movieId: number; userId: number }> = ({ movieI
     });
   };
 
-  if (loading) return <div>Carregando avaliação...</div>;
+  if (loading) return <div>Loading rating...</div>;
 
   return (
     <div className="rating-container">
-      <h3>Sua avaliação:</h3>
+      <h3>Your rating:</h3>
       <div className="stars-container">
         {renderStars()}
         <div className="rating-value">
-          {userRating ? `(${userRating}/5)` : '(Nenhuma avaliação)'}
+          {userRating ? `(${userRating}/5)` : '(No rating)'}
         </div>
       </div>
     </div>
@@ -101,7 +101,7 @@ const MoviePage: React.FC = () => {
     const fetchMovie = async () => {
       try {
         // Usar o movieId da URL
-        const response = await axios.get(`http://localhost:3000/movies/${movieId}`);
+        const response = await axios.get(`http://localhost:3000/movies/by-id/${movieId}`);
         setMovie(response.data);
       } catch (error) {
         console.error('Erro ao carregar o filme:', error);

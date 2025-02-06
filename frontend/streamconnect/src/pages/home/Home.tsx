@@ -12,7 +12,7 @@ const Home: React.FC = () => {
         <Container className="h-100 d-flex align-items-center justify-content-center">
           <Row>
             <Col md={12} className="text-center">
-              <h1 className="display-1 mb-4">Bem-vindo ao StreamConnect</h1>
+              <h1 className="display-1 mb-4">Welcome to StreamConnect</h1>
               <div className="d-flex justify-content-center gap-3">
                 <Button
                   variant="primary"
