@@ -77,15 +77,15 @@ const RatingComponent: React.FC<{ movieId: number; userId: number }> = ({ movieI
     });
   };
 
-  if (loading) return <div>Carregando avaliação...</div>;
+  if (loading) return <div>Loading rating...</div>;
 
   return (
     <div className="rating-container">
-      <h3>Sua avaliação:</h3>
+      <h3>Your rating:</h3>
       <div className="stars-container">
         {renderStars()}
         <div className="rating-value">
-          {userRating ? `(${userRating}/5)` : '(Nenhuma avaliação)'}
+          {userRating ? `(${userRating}/5)` : '(No rating)'}
         </div>
       </div>
     </div>

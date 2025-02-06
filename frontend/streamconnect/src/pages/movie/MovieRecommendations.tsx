@@ -1,3 +1,4 @@
+// MovieRecommendations.tsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -16,12 +17,12 @@ interface Props {
 
 const MovieRecommendations: React.FC<Props> = ({ movieTitle, movieId }) => {
   const [recommendedMovies, setRecommendedMovies] = useState<Movie[]>([]);
-  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const controller = new AbortController();
-    
+
     const fetchRecommendations = async () => {
       try {
         const response = await axios.post(
@@ -96,14 +97,16 @@ const MovieRecommendations: React.FC<Props> = ({ movieTitle, movieId }) => {
 
   const handleMovieClick = (id: number) => {
     navigate(`/movie/${id}`);
-    // Remove o window.location.reload()
   };
 
   return (
     <div className="recommendations-container">
       <h2>Similar Movies</h2>
       {isLoading ? (
-        <div className="loading">Carregando recomendações...</div>
+        <div className="loading">
+          <div className="spinner"></div>
+          <span>Carregando recomendações...</span>
+        </div>
       ) : (
         <div className="recommendations-grid">
           {recommendedMovies.map((movie) => (

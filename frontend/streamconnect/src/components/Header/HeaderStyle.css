@@ -141,6 +141,10 @@
   margin-bottom: 0.5rem;
 }
 
+.user-name {
+  color: black;
+}
+
 .user-email {
   font-size: 0.9rem;
   color: #374151;

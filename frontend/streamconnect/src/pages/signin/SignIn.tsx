@@ -40,8 +40,12 @@ const SignIn: React.FC = () => {
 
       const decoded = jwtDecode<TokenPayload>(access_token);
       const userId = decoded.payload.sub;
+      const username = decoded.payload.username;
 
-      login(access_token, userId);
+      console.log("USEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEER");
+      console.log(username);
+
+      login(access_token, userId, username);
       navigate('/catalog');
     } catch (error: any) {
       console.error("Login Error:", error);

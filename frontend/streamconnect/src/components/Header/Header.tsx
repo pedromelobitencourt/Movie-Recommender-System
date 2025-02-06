@@ -1,3 +1,4 @@
+// Header.tsx
 import React, { useEffect, useState, useRef } from 'react';
 import { Navbar, Container, Nav } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,9 +10,13 @@ import './HeaderStyle.css';
 const Header: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const { user, logout, isAuthenticated } = useAuth();
+  const { username, logout, isAuthenticated } = useAuth();
   const menuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+
+  console.log("***************************************************************");
+  console.log(username);
+  console.log("***************************************************************");
 
   const handleClickOutside = (event: MouseEvent) => {
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -80,7 +85,7 @@ const Header: React.FC = () => {
 
               <div className={`menu-dropdown ${menuOpen ? 'open' : ''}`}>
                 <div className="user-info">
-                  <span className="user-email">{user?.email}</span>
+                  <span className="user-name">{username}</span>
                 </div>
                 <button 
                   onClick={handleLogout} 

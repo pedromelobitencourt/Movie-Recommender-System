@@ -6,7 +6,8 @@ interface AuthContextType {
   accessToken: string | null;
   userId: number | null;
   isAuthenticated: boolean;
-  login: (token: string, userId: number) => void;
+  username: string | null; // Adicionado o username,
+  login: (token: string, userId: number, username: string) => void;
   logout: () => void;
 }
 
@@ -32,27 +33,33 @@ export const useAuth = () => {
 export const AuthProvider: React.FC = ({ children }) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
-  const login = (token: string, userId: number) => {
+  const login = (token: string, userId: number, username: string) => {
     setAccessToken(token);
     setUserId(userId);
+    setUsername(username);
     localStorage.setItem('accessToken', token);
     localStorage.setItem('userId', String(userId));
+    localStorage.setItem('username', username);
   };
 
   const logout = () => {
     setAccessToken(null);
     setUserId(null);
+    setUsername(null);
     localStorage.removeItem('accessToken');
     localStorage.removeItem('userId');
+    localStorage.removeItem('username');
     navigate('/signin');
   };
 
   useEffect(() => {
     const storedToken = localStorage.getItem('accessToken');
     const storedUserId = localStorage.getItem('userId');
+    const storedUsername = localStorage.getItem('username');
 
     if (storedToken) {
       try {
@@ -62,6 +69,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         } else {
           setAccessToken(storedToken);
           setUserId(Number(storedUserId));
+          setUsername(storedUsername);
         }
       } catch {
         logout(); // Token inválido
@@ -74,6 +82,7 @@ export const AuthProvider: React.FC = ({ children }) => {
       value={{
         accessToken,
         userId,
+        username,
         isAuthenticated: !!accessToken,
         login,
         logout,
