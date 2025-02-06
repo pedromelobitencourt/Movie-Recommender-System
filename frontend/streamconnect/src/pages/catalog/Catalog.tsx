@@ -18,8 +18,10 @@ const Catalog: React.FC = () => {
   const [isLoadingRecommendations, setIsLoadingRecommendations] = useState(true);
   const navigate = useNavigate();
 
+  // Skeleton loader array
+  const skeletonItems = Array(6).fill(null);
+
   useEffect(() => {
-    // Fetch recommended movies for "Recomendados para Você"
     const fetchRecommendedMovies = async () => {
       try {
         const response = await axios.post('http://127.0.0.1:8111/prediction/recommend', {
@@ -27,7 +29,6 @@ const Catalog: React.FC = () => {
           num_recommendations: 45,
         });
 
-        // Map over the recommended movie IDs and fetch full details for each
         const detailedMovies = await Promise.all(
           response.data.map(async (movie: { id: number; title: string }) => {
             try {
@@ -44,13 +45,12 @@ const Catalog: React.FC = () => {
                   : 'https://via.placeholder.com/200x300?text=No+Image',
               };
             } catch (error) {
-              console.error(`Erro ao buscar detalhes do filme com ID ${movie.id}:`, error);
-              return null; // Retorna null se algum filme falhar
+              console.error(`Error fetching movie details for ID ${movie.id}:`, error);
+              return null;
             }
           })
         );
 
-        // Filtra nulos
         const filteredMovies = detailedMovies.filter(
           (movie): movie is Movie => movie !== null
         );
@@ -58,7 +58,7 @@ const Catalog: React.FC = () => {
         setRecommendedMovies(filteredMovies);
         setIsLoadingRecommendations(false);
       } catch (error) {
-        console.error('Erro ao carregar recomendações:', error);
+        console.error('Error loading recommendations:', error);
         setIsLoadingRecommendations(false);
       }
     };
@@ -67,14 +67,10 @@ const Catalog: React.FC = () => {
   }, [userId]);
 
   useEffect(() => {
-    // Fetch all movies for "Filmes no Catálogo"
     const fetchCatalogMovies = async () => {
       try {
         const response = await axios.get('http://localhost:3000/movies', {
-          params: {
-            page: 1,
-            limit: 4796
-          }
+          params: { page: 1, limit: 4796 }
         });
         const movies = response.data.map((movie: any) => ({
           id: movie.id,
@@ -86,7 +82,7 @@ const Catalog: React.FC = () => {
         setCatalogMovies(movies);
         setIsLoadingCatalog(false);
       } catch (error) {
-        console.error('Erro ao carregar filmes do catálogo:', error);
+        console.error('Error loading catalog movies:', error);
         setIsLoadingCatalog(false);
       }
     };
@@ -103,29 +99,34 @@ const Catalog: React.FC = () => {
     ));
   };
 
+  const renderSkeletonLoader = () => {
+    return skeletonItems.map((_, index) => (
+      <div key={index} className="movie-card skeleton">
+        <div className="skeleton-image"></div>
+        <div className="skeleton-text"></div>
+        <div className="skeleton-text-short"></div>
+      </div>
+    ));
+  };
+
   const handleMovieClick = (id: number) => {
     navigate(`/movie/${id}`);
-    // Remove o window.location.reload()
   };
 
   return (
     <div className="catalog-container">
       <section className="catalog-section">
-        <h2>Recomendados para Você</h2>
-        {isLoadingRecommendations ? (
-          <div className="loading">Carregando recomendações...</div>
-        ) : (
-          <div className="movies-grid">{renderMovies(recommendedMovies)}</div>
-        )}
+        <h2>Recommended for You</h2>
+        <div className="movies-grid">
+          {isLoadingRecommendations ? renderSkeletonLoader() : renderMovies(recommendedMovies)}
+        </div>
       </section>
 
       <section className="catalog-section">
-        <h2>Filmes no Catálogo</h2>
-        {isLoadingCatalog ? (
-          <div className="loading">Carregando filmes do catálogo...</div>
-        ) : (
-          <div className="movies-grid">{renderMovies(catalogMovies)}</div>
-        )}
+        <h2>Catalog Movies</h2>
+        <div className="movies-grid">
+          {isLoadingCatalog ? renderSkeletonLoader() : renderMovies(catalogMovies)}
+        </div>
       </section>
     </div>
   );
