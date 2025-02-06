@@ -8,7 +8,7 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
+    "start": "node dist/main.js",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
@@ -21,7 +21,8 @@
     "populate:db-movie": "ts-node -r tsconfig-paths/register src/movie/scripts/populate-database.ts",
     "populate:db-user": "ts-node -r tsconfig-paths/register src/user/scripts/populate-database.ts",
     "populate:db-rating": "ts-node -r tsconfig-paths/register src/rating/scripts/populate-database.ts",
-    "typeorm": "typeorm-ts-node-commonjs"
+    "typeorm": "typeorm-ts-node-commonjs",
+    "vercel-build": "npm run build"
   },
   "dependencies": {
     "@faker-js/faker": "^9.4.0",

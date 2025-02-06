@@ -154,7 +154,6 @@ const MoviePage: React.FC = () => {
           <MovieRecommendations 
             movieTitle={movie.title} 
             movieId={Number(movieId)} 
-            userId={userId} 
           />
         </div>
       </div>

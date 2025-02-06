@@ -1,12 +1,12 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 
 interface AuthContextType {
   accessToken: string | null;
   userId: number | null;
+  username: string | null;
   isAuthenticated: boolean;
-  username: string | null; // Adicionado o username,
   login: (token: string, userId: number, username: string) => void;
   logout: () => void;
 }
@@ -30,7 +30,12 @@ export const useAuth = () => {
   return context;
 };
 
-export const AuthProvider: React.FC = ({ children }) => {
+// Adicione o tipo de props para aceitar `children`
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
   const [username, setUsername] = useState<string | null>(null);
@@ -69,7 +74,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         } else {
           setAccessToken(storedToken);
           setUserId(Number(storedUserId));
-          setUsername(storedUsername);
+          setUsername(storedUsername || null);
         }
       } catch {
         logout(); // Token inválido

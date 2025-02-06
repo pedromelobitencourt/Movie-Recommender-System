@@ -15,7 +15,7 @@ interface Props {
   movieId: number;
 }
 
-const MovieRecommendations: React.FC<Props> = ({ movieTitle, movieId }) => {
+const MovieRecommendations: React.FC<Props> = ({ movieTitle }) => {
   const [recommendedMovies, setRecommendedMovies] = useState<Movie[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
